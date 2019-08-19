@@ -77,7 +77,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "user-form";
         }
-        if (userService.getByName(user.getUsername())!=null){
+        if (user.getId()==0&&userService.getByName(user.getUsername())!=null){
             bindingResult.addError(new FieldError("userEntity", "username","user exist!"));
             return "user-form";
         }
