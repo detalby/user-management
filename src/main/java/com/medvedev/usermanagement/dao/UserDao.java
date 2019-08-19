@@ -2,6 +2,9 @@ package com.medvedev.usermanagement.dao;
 
 import com.medvedev.usermanagement.model.Role;
 import com.medvedev.usermanagement.model.UserEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -20,5 +23,7 @@ public interface UserDao {
     List<UserEntity> filterByUserName(String name);
 
     List<UserEntity> filterByUserNameAndRole(String name, Role role);
+
+    Page<UserEntity> getUsersPage(PageRequest pageRequest);
 
 }

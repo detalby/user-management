@@ -33,10 +33,14 @@
                placeholder="Enter Username"
                class="form-control-sm ml-5 mr-2 mb-3"/>
 
-        <input type="search"
+        <select name="role" class="form-control-sm mr-2 mb-3">
+            <option th:text="ADMIN"></option>
+            <option th:text="USER"></option>
+        </select>
+        <!--<input type="search"
                name="role"
                placeholder="ADMIN or USER"
-               class="form-control-sm mr-2 mb-3"/>
+               class="form-control-sm mr-2 mb-3"/>-->
 
         <button type="submit"
                 class="btn btn-success btn-sm mb-3">Search
@@ -74,6 +78,7 @@
         </tr>
         </tbody>
     </table>
+
 
     <form th:action="@{/logout}" method="post">
         <input class="btn btn-primary btn-sm mb-3" type="submit" value="Logout"/>

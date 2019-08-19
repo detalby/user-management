@@ -3,6 +3,8 @@ package com.medvedev.usermanagement.dao;
 import com.medvedev.usermanagement.model.Role;
 import com.medvedev.usermanagement.model.UserEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -34,6 +36,11 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<UserEntity> filterByUserName(String name) {
         return repository.filterByUsername(name);
+    }
+
+    @Override
+    public Page<UserEntity> getUsersPage(PageRequest pageRequest) {
+        return repository.findAll(pageRequest);
     }
 
     @Override

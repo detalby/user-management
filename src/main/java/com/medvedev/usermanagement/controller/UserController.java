@@ -9,13 +9,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.Map;
+
+
+import static com.medvedev.usermanagement.utile.ConstantsError.PASSWORD_ERROR;
+import static com.medvedev.usermanagement.utile.ConstantsError.USER_EXIST_ERROR;
 
 /**
  * created by Vladimir Medvedev 15.08.2019
@@ -34,11 +35,14 @@ public class UserController {
         return "userList";
     }
 
+
     @GetMapping("/search")
     public String search(Model model,
                          @RequestParam(name = "username") String username,
                          @RequestParam(name = "role") String role) {
-        if (!username.trim().isEmpty() && role.trim().isEmpty()) {
+        if (username.trim().isEmpty() && role.trim().isEmpty()) {
+            model.addAttribute("users", userService.getAll());
+        } else if (!username.trim().isEmpty() && role.trim().isEmpty()) {
             model.addAttribute("users", userService.filterByName(username));
         } else if (username.trim().isEmpty() && !role.trim().isEmpty()) {
             model.addAttribute("users", userService.getAllByRole(role.equals("ADMIN") ? Role.ADMIN : Role.USER));
@@ -59,26 +63,25 @@ public class UserController {
 
     @GetMapping("/new")
     public String newForm(Model model) {
-        UserEntity userEntity = new UserEntity();
-        model.addAttribute("userEntity", userEntity);
+        model.addAttribute("userEntity", new UserEntity());
         return "user-form";
     }
 
     @PostMapping("/save")
     public String newUser(@Valid UserEntity user, BindingResult bindingResult) {
         if (user.getId() == 0 && !ValidationUtil.validatePassword(user.getPassword())) {
-            bindingResult.addError(ValidationUtil.pasError());
+            bindingResult.addError(PASSWORD_ERROR);
         }
         if (user.getId() > 0 && !user.getPassword().isEmpty()) {
             if (!ValidationUtil.validatePassword(user.getPassword())) {
-                bindingResult.addError(ValidationUtil.pasError());
+                bindingResult.addError(PASSWORD_ERROR);
             }
         }
         if (bindingResult.hasErrors()) {
             return "user-form";
         }
         if (user.getId() == 0 && userService.getByName(user.getUsername()) != null) {
-            bindingResult.addError(new FieldError("userEntity", "username", "user exist!"));
+            bindingResult.addError(USER_EXIST_ERROR);
             return "user-form";
         }
         if (!user.getPassword().isEmpty()) {

@@ -6,6 +6,8 @@ import com.medvedev.usermanagement.model.Status;
 import com.medvedev.usermanagement.model.UserEntity;
 import com.medvedev.usermanagement.utile.UserNotActiveException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,6 +34,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserEntity> filterByNameAndRole(String name, Role role) {
         return userDao.filterByUserNameAndRole(name, role);
+    }
+
+    @Override
+    public Page<UserEntity> getUserPage(PageRequest pageRequest) {
+        return userDao.getUsersPage(pageRequest);
     }
 
     @Override
