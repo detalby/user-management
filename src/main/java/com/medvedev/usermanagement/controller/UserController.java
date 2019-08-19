@@ -77,11 +77,13 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "user-form";
         }
-        if (user.getId()==0&&userService.getByName(user.getUsername())!=null){
-            bindingResult.addError(new FieldError("userEntity", "username","user exist!"));
+        if (user.getId() == 0 && userService.getByName(user.getUsername()) != null) {
+            bindingResult.addError(new FieldError("userEntity", "username", "user exist!"));
             return "user-form";
         }
-        user.setPassword(encoder.encode(user.getPassword()));
+        if (!user.getPassword().isEmpty()) {
+            user.setPassword(encoder.encode(user.getPassword()));
+        }
         user.setCreated(LocalDateTime.now());
         userService.save(user);
         return "redirect:/user";
